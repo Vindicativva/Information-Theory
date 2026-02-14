@@ -218,11 +218,14 @@ function process(decrypt = false) {
 
     if (algo === "column") {
 
-        if (!key2) return;
-
-        result = decrypt
-            ? columnDecrypt(columnDecrypt(text, key2), key1)
-            : columnEncrypt(columnEncrypt(text, key1), key2);
+        if (key2)
+            result = decrypt
+                ? columnDecrypt(columnDecrypt(text, key2), key1)
+                : columnEncrypt(columnEncrypt(text, key1), key2);
+        else
+            result = decrypt
+                ? columnDecrypt(text, key1)
+                : columnEncrypt(text, key1);
 
     } else {
 
@@ -299,17 +302,28 @@ function processFile(decrypt = false) {
         const algo = $("algorithm").value;
         const key1 = $("key1").value;
         const key2 = $("key2").value;
-
+        
         if (!key1) return;
-        if (algo === "column" && !key2) return;
 
-        let result = (algo === "column")
-            ? (decrypt
-                ? columnDecrypt(columnDecrypt(text, key2), key1)
-                : columnEncrypt(columnEncrypt(text, key1), key2))
-            : (decrypt
+        let result = "";
+
+        if (algo === "column") {
+            
+            if (key2)
+                result = decrypt
+                    ? columnDecrypt(columnDecrypt(text, key2), key1)
+                    : columnEncrypt(columnEncrypt(text, key1), key2);
+            else
+                result = decrypt
+                    ? columnDecrypt(text, key1)
+                    : columnEncrypt(text, key1);
+
+        } else {
+
+            result = decrypt
                 ? vigenereDecrypt(text, key1)
-                : vigenereEncrypt(text, key1));
+                : vigenereEncrypt(text, key1);
+        }
 
         const blob = new Blob([result], { type: "text/plain" });
         const linkA = $("downloadLinkA");
@@ -387,9 +401,11 @@ function toggleKey2() {
 toggleKey2();
 
 
-/* =========================================================
+/* 
+=========================================================
    КАСТОМНЫЙ SELECT
-========================================================= */
+========================================================= 
+*/
 
 const customSelect = $("customSelect");
 const selectSelected = $("selectSelected");
@@ -425,4 +441,29 @@ document.addEventListener("click", (e) => {
         customSelect.classList.remove("open");
         selectDropdown.classList.add("hidden");
     }
+});
+
+/* 
+=========================================================
+   ВЫКЛЮЧАТЕЛЬ ТЕМЫ
+========================================================= 
+*/
+
+const themeSwitch = $("themeSwitch");
+
+if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light");
+    themeSwitch.checked = true;
+}
+
+themeSwitch.addEventListener("change", () => {
+
+    if (themeSwitch.checked) {
+        document.body.classList.add("light");
+        localStorage.setItem("theme", "light");
+    } else {
+        document.body.classList.remove("light");
+        localStorage.setItem("theme", "dark");
+    }
+
 });

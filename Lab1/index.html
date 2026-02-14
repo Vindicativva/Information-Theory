@@ -11,6 +11,12 @@
 
     <!-- СЛАЙДЕР С ВЫБОРОМ -->
     <div class="app-header">
+
+        <div class="theme-toggle">
+            <input type="checkbox" id="themeSwitch">
+            <label for="themeSwitch" class="toggle-slider"></label>
+        </div>
+
         <div class="mode-switch">
             <div class="mode-btn active" data-mode="text">Текст</div>
             <div class="mode-btn" data-mode="file">Файл</div>
@@ -41,12 +47,7 @@
                 </div>
 
             </div>
-
-            <!-- Скрытое поле для логики -->
             <input type="hidden" id="algorithm" value="column">
-
-            
-
 
             <input type="text"
                     id="key1"
@@ -69,8 +70,8 @@
         <div class="content" id="textMode">
             <textarea id="inputText" placeholder="Введите текст..."></textarea>
             <div class="buttons">
-                <button class="primary" id="encryptBtn">Зашифровать</button>
-                <button class="secondary" id="decryptBtn">Расшифровать</button>
+                <button class="primary" id="encryptBtn">Шифровать</button>
+                <button class="secondary" id="decryptBtn">Дешифровать</button>
                 <button class="secondary" id="cleanBtn" style="position: absolute; right: 0;">Очистить</button>
             </div>
             <textarea id="outputText" placeholder="Результат..." readonly></textarea>
@@ -87,8 +88,8 @@
             </div>
             <div class="buttons">
                 <button class="download h" id="downloadLink" style="position: absolute; left: 0;"><a style="color: black; text-decoration: none;" id="downloadLinkA">Скачать результат</a></button>
-                <button class="primary" id="encryptFileBtn">Зашифровать</button>
-                <button class="secondary" id="decryptFileBtn">Расшифровать</button>
+                <button class="primary" id="encryptFileBtn">Шифровать</button>
+                <button class="secondary" id="decryptFileBtn">Дешифровать</button>
                 <button class="secondary" id="cleanfileBtn" style="position: absolute; right: 0;">Очистить</button>
             </div>
         </div>
