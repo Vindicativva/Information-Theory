@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Криптография</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- СЛАЙДЕР С ВЫБОРОМ -->
+    <div class="app-header">
+        <div class="mode-switch">
+            <div class="mode-btn active" data-mode="text">Текст</div>
+            <div class="mode-btn" data-mode="file">Файл</div>
+            <div class="switch-indicator"></div>
+        </div>
+    </div>
+
+    <!-- МЕНЯЮЩИЙСЯ БЛОК -->
+    <div class="app-body">
+
+        <div class="settings">
+
+
+            <div class="custom-select" id="customSelect">
+
+                <div class="select-selected" id="selectSelected">
+                    Столбцовый метод
+                    <div class="arrow"></div>
+                </div>
+
+                <div class="select-dropdown hidden" id="selectDropdown">
+                    <div class="select-item active" data-value="column">
+                        Столбцовый метод
+                    </div>
+                    <div class="select-item" data-value="vigenere">
+                        Алгоритм Виженера (самоген.)
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Скрытое поле для логики -->
+            <input type="hidden" id="algorithm" value="column">
+
+            
+
+
+            <input type="text"
+                    id="key1"
+                    placeholder="Ключ 1"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false">
+                    
+            <input class="key2-wrapper" type="text"
+                    id="key2"
+                    placeholder="Ключ 2"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false">
+        </div>
+
+        <!-- ТЕКСТОВЫЙ РЕЖИМ -->
+        <div class="content" id="textMode">
+            <textarea id="inputText" placeholder="Введите текст..."></textarea>
+            <div class="buttons">
+                <button class="primary" id="encryptBtn">Зашифровать</button>
+                <button class="secondary" id="decryptBtn">Расшифровать</button>
+                <button class="secondary" id="cleanBtn" style="position: absolute; right: 0;">Очистить</button>
+            </div>
+            <textarea id="outputText" placeholder="Результат..." readonly></textarea>
+        </div>
+
+        <!-- ФАЙЛОВЫЙ РЕЖИМ -->
+        <div class="content hidden" id="fileMode">
+            <div class="file-wrapper" id="fileWrapper">
+                <label class="file-upload">
+                    <input type="file" id="fileInput">
+                    Выбрать файл
+                </label>
+                <span id="fileName" class="file-name"></span>
+            </div>
+            <div class="buttons">
+                <button class="download h" id="downloadLink" style="position: absolute; left: 0;"><a style="color: black; text-decoration: none;" id="downloadLinkA">Скачать результат</a></button>
+                <button class="primary" id="encryptFileBtn">Зашифровать</button>
+                <button class="secondary" id="decryptFileBtn">Расшифровать</button>
+                <button class="secondary" id="cleanfileBtn" style="position: absolute; right: 0;">Очистить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

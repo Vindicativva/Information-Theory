@@ -1,0 +1,391 @@
+/* 
+=========================================================
+   БАЗА
+========================================================= 
+*/
+
+body {
+    margin: 0;
+    background: #203a43;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 
+=========================================================
+   ОСНОВНОЙ КОНТЕЙНЕР
+========================================================= 
+*/
+
+.app {
+    width: 850px;
+    margin-top: 50px;
+    background: #1c1c1c;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+/* 
+=========================================================
+   HEADER
+========================================================= 
+*/
+
+.app-header {
+    height: 70px;
+    background: #252525;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 
+=========================================================
+   ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ
+========================================================= 
+*/
+
+.mode-switch {
+    position: relative;
+    width: 300px;
+    display: flex;
+    background: #333;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 2;
+    color: #aaa;
+    transition: 0.3s;
+}
+
+.mode-btn.active {
+    color: black;
+}
+
+.switch-indicator {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: #00bcd4;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+/* 
+=========================================================
+   ОСНОВНОЕ СОДЕРЖИМОЕ
+========================================================= 
+*/
+
+.app-body {
+    padding: 25px;
+    transition: 0.3s;
+}
+
+/* 
+=========================================================
+   НАСТРОЙКИ (SELECT + INPUT)
+========================================================= 
+*/
+
+.settings {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.settings input,
+.settings select {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #2f2f2f;
+    color: white;
+}
+
+/* 
+=========================================================
+   ТЕКСТОВЫЕ ПОЛЯ
+========================================================= 
+*/
+
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 12px;
+    box-sizing: border-box;
+    border-radius: 15px;
+    border: none;
+    background: #2f2f2f;
+    color: white;
+    resize: none;
+}
+
+/* 
+=========================================================
+   КНОПКИ
+========================================================= 
+*/
+
+.buttons {
+    margin: 15px 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.primary {
+    background: #00bcd4;
+    color: black;
+}
+
+.secondary {
+    background: #444;
+    color: white;
+}
+
+/* 
+=========================================================
+   ФАЙЛОВЫЙ БЛОК
+========================================================= 
+*/
+
+.file-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Кнопка выбора файла */
+.file-upload {
+    flex: 1;
+    display: block;
+    text-align: center;
+    padding: 15px;
+    background: #2f2f2f;
+    border-radius: 15px;
+    cursor: pointer;
+    color: white;
+    transition: 0.4s ease;
+}
+
+.file-upload:hover {
+    background: #3a3a3a;
+}
+
+.file-upload input {
+    display: none;
+}
+
+/* Название файла */
+.file-name {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: 0.4s ease;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-wrapper.active .file-name {
+    opacity: 1;
+    transform: translateX(0);
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+/* 
+=========================================================
+   КНОПКА СКАЧИВАНИЯ
+========================================================= 
+*/
+
+.download {
+    display: block;
+    text-align: center;
+    border-radius: 20px;
+    background: #43c599;
+    color: black;
+    text-decoration: none;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.download.h {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+/* 
+=========================================================
+   СКРЫТИЕ
+========================================================= 
+*/
+
+.hidden {
+    display: none;
+}
+
+/* 
+=========================================================
+   КАСТОМНЫЙ SELECT
+========================================================= 
+*/
+
+.settings .custom-select {
+    flex: 1.2; 
+}
+
+.settings .select-selected {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.custom-select {
+    font-size: 11pt;
+    position: relative;
+    user-select: none;
+}
+
+.select-selected {
+    background: #2f2f2f;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.select-selected:hover {
+    background: #3a3a3a;
+}
+
+.arrow {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #00bcd4;
+    transition: 0.3s;
+}
+
+.custom-select.open .arrow {
+    transform: rotate(180deg);
+}
+
+.select-dropdown {
+    position: absolute;
+    top: 110%;
+    width: 100%;
+    background: #2f2f2f;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    animation: dropdown 0.2s ease;
+    z-index: 10;
+}
+
+.select-item {
+    padding: 12px 16px;
+    font-size: 11pt;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.select-item:hover {
+    background: #3a3a3a;
+}
+
+.select-item.active {
+    background: #00bcd4;
+    color: black;
+}
+
+@keyframes dropdown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 
+=========================================================
+   АНИМАЦИИ
+========================================================= 
+*/
+
+/* Скрытие второго ключа */
+.key2-wrapper {
+    overflow: hidden;
+    transition:
+        max-height 0.4s ease,
+        opacity 0.3s ease,
+        transform 0.3s ease;
+    max-height: 80px;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.key2-wrapper.h {
+    max-height: 0;
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+/* Очистка */
+.fade-clear {
+    animation: fadeClear 0.3s ease;
+}
+
+@keyframes fadeClear {
+    0%   { opacity: 1; transform: scale(1); }
+    50%  { opacity: 0.3; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Подпрыгивание */
+.download.bounce {
+    animation: bounceDownload 0.5s ease;
+}
+
+@keyframes bounceDownload {
+    0%   { transform: translateY(0); }
+    25%  { transform: translateY(-10px); }
+    40%  { transform: translateY(0); }
+    55%  { transform: translateY(-5px); }
+    70%  { transform: translateY(0); }
+    85%  { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
+}
