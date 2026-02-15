@@ -155,7 +155,6 @@ function vigenereEncrypt(text, key) {
 
         } else {
             result += text[i];
-            if (text[i] !== " ") num++;
         }
     }
 
@@ -189,7 +188,6 @@ function vigenereDecrypt(text, key) {
 
         } else {
             result += text[i];
-            if (text[i] !== " ") num++;
         }
     }
 
