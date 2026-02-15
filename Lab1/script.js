@@ -138,18 +138,14 @@ function vigenereEncrypt(text, key) {
     key = clean(key);
 
     let result = "";
-    let fullKey = key;
+    let fullKey = key + cleanText;
     let num = 0;
 
     for (let i = 0; i < text.length; i++) {
 
         let char = text[i].toUpperCase();
 
-        if (alphabet.includes(char)) {
-
-            if (num >= key.length) {
-                fullKey += cleanText[num - key.length];
-            }
+        if (alphabet.includes(char)) {      
 
             let m = alphabet.indexOf(char);
             let k = alphabet.indexOf(fullKey[num]);
@@ -159,6 +155,7 @@ function vigenereEncrypt(text, key) {
 
         } else {
             result += text[i];
+            if (text[i] !== " ") num++;
         }
     }
 
@@ -192,6 +189,7 @@ function vigenereDecrypt(text, key) {
 
         } else {
             result += text[i];
+            if (text[i] !== " ") num++;
         }
     }
 
@@ -235,6 +233,7 @@ function process(decrypt = false) {
     }
 
     $("outputText").value = result;
+    localStorage.setItem("outputText", result);
 }
 
 
@@ -266,6 +265,10 @@ function cleanInfo() {
         $("inputText"),
         $("outputText")
     ]);
+    localStorage.setItem("key1", "");
+    localStorage.setItem("key2", "");
+    localStorage.setItem("inputText", "");
+    localStorage.setItem("outputText", "");
 }
 
 
@@ -280,6 +283,8 @@ function cleanFileInfo() {
         $("key1"),
         $("key2")
     ]);
+    localStorage.setItem("key1", "");
+    localStorage.setItem("key2", "");
 }
 
 
@@ -327,9 +332,13 @@ function processFile(decrypt = false) {
 
         const blob = new Blob([result], { type: "text/plain" });
         const linkA = $("downloadLinkA");
-
+        console.log(file.name);
         linkA.href = URL.createObjectURL(blob);
-        linkA.download = "result.txt";
+
+        linkA.download = file.name.replace(
+            /(\.[^/.]+)?$/,
+            (decrypt ? "_dec" : "_enc") + "$1"
+        );
 
         const link = $("downloadLink");
         link.classList.remove("h");
@@ -467,3 +476,42 @@ themeSwitch.addEventListener("change", () => {
     }
 
 });
+
+/* 
+=========================================================
+   СОХРАНЕНИЕ В LOCALSTROAGE
+========================================================= 
+*/
+
+
+const fieldsToSave = [
+    "inputText",
+    "outputText",
+    "key1",
+    "key2"
+];
+
+fieldsToSave.forEach(id => {
+    const el = document.getElementById(id);
+
+    if (!el) return;
+
+    el.addEventListener("input", () => {
+        localStorage.setItem(id, el.value);
+    });
+});
+
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    fieldsToSave.forEach(id => {
+        const el = document.getElementById(id);
+        const saved = localStorage.getItem(id);
+
+        if (el && saved !== null) {
+            el.value = saved;
+        }
+    });
+
+});
+
