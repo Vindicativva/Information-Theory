@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Лабораторная №2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app">
+        <div class="grid">
+
+            <div class="card">
+
+                <h3>Начальное состояние регистра</h3>
+                <input id="seed" autocomplete="off" placeholder="1010101010101010101010101010101">
+
+                <div id="seedCounter" class="seed-counter">
+                    Количество бит: 0 / 31
+                </div>
+
+                <div class="stat">
+                    Полином: x³¹ + x³ + 1
+                </div>
+
+            </div>
+
+            <div class="card file-card">
+
+                <h3>Файл</h3>
+
+                <div class="drop" id="drop">
+
+                    <div class="upload-icon">☁</div>
+
+                    <div class="drop-text">Перетащите файл сюда</div>
+
+                    <div class="drop-subtext">или нажмите для выбора файла</div>
+
+                </div>
+
+                <input type="file" id="file">
+
+                <div class="stat" id="fileinfo">
+                    Файл не выбран
+                </div>
+
+                <div class="buttons">
+                    <button class="encrypt" onclick="EncDec('encrypt')">Зашифровать</button>
+                    <button class="decrypt" onclick="EncDec('decrypt')">Расшифровать</button>
+                    <button class="download h" onclick="download()" id="btnDownload">Скачать</button>
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Исходный текст</h3>
+                <textarea id="original" readonly></textarea>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Ключ</h3>
+                <textarea id="key" readonly></textarea>
+
+            </div>
+
+            <div class="card result-card">
+
+                <h3>Шифротекст</h3>
+                <textarea id="result" readonly></textarea>
+
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div>Лабораторная № 2</div>
+            <div>Многочлен степени 31</div>
+        </div>
+
+    </div>
+
+    <a id="downloadLink" style="display:none"></a>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
