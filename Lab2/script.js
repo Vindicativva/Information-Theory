@@ -31,128 +31,79 @@ function cleanSeed(s) {
 // Класс LFSR (Linear Feedback Shift Register)
 // Генератор псевдослучайной последовательности
 // =====================================================
+
 class LFSR {
+    constructor(seed) {
+        seed = cleanSeed(seed).padEnd(31, '1');
+        this.reg = parseInt(seed, 2);
+    }
 
-	constructor(seed) {
+    nextBit() {
+        let out = (this.reg >> 30) & 1;
 
-		// очищаем ввод
-		seed = cleanSeed(seed);
+        let fb = ((this.reg >> 30) ^ (this.reg >> 2)) & 1;
 
-		// если seed меньше 31 бит — дополняем единицами
-		if (seed.length < 31)
-			seed = seed.padEnd(31, '1');
+        this.reg = ((this.reg << 1) & 0x7FFFFFFF) | fb;
 
-		// создаём массив бит регистра
-		this.reg = seed.slice(0, 31).split('').map(Number);
-        //console.log("OLD: " + this.reg.join(""));
-	}
+        return out;
+    }
 
-	// -------------------------------------------------
-	// Генерация следующего бита ключевой последовательности
-	// Полином: x^31 + x^3 + 1
-	// -------------------------------------------------
-	nextBit() {
+    nextByte() {
+        let byte = 0;
 
-		// выходной бит — первый слева
-		let out = this.reg[0];
+        for (let i = 0; i < 8; i++) {
+            byte = (byte << 1) | this.nextBit();
+        }
 
-		// вычисляем бит обратной связи
-		let fb = this.reg[0] ^ this.reg[28];
-
-        //let var1 = this.reg[0];
-        //let var2 = this.reg[28];
-        //let var3 = this.reg[14];
-        //let var4 = this.reg[0];
-
-		// сдвиг регистра влево
-		for (let i = 0; i < 30; i++) {
-			this.reg[i] = this.reg[i + 1];
-		}
-
-		// записываем новый бит справа
-		this.reg[30] = fb;
-
-        //console.log("NEW: " + this.reg.join("") + "  " + var1 + " ^ " + var2 + " = " + fb);
-
-		return out;
-	}
+        return byte;
+    }
 }
-
-
-// =====================================================
-// Преобразование массива байтов в массив бит
-// =====================================================
-function bytesToBits(bytes) {
-
-	let bits = [];
-
-	for (let b of bytes) {
-
-		for (let i = 7; i >= 0; i--) {
-			bits.push((b >> i) & 1);
-		}
-
-	}
-
-	return bits;
-}
-
-
-// =====================================================
-// Преобразование массива бит обратно в байты
-// =====================================================
-function bitsToBytes(bits) {
-
-	let bytes = [];
-
-	for (let i = 0; i < bits.length; i += 8) {
-
-		let byte = 0;
-
-		for (let j = 0; j < 8; j++) {
-			byte = (byte << 1) | (bits[i + j] || 0);
-		}
-
-		bytes.push(byte);
-	}
-
-	return new Uint8Array(bytes);
-}
-
 
 // =====================================================
 // Основная функция обработки (шифрование / дешифрование)
 // =====================================================
 function process(seed) {
 
-	// создаём генератор LFSR
-	let lfsr = new LFSR(seed);
+    let lfsr = new LFSR(seed);
 
-	// переводим файл в битовую последовательность
-	let bits = bytesToBits(fileData);
+    let result = new Uint8Array(fileData.length);
 
-	let key = [];
-	let result = [];
+    let original_str = "";
+    let key_str = "";
+    let result_str = "";
 
-	// XOR исходного бита с битом ключа
-	for (let b of bits) {
+    let bitsCollected = 0;
+    const LIMIT = 1600;
 
-		let k = lfsr.nextBit();
+    for (let i = 0; i < fileData.length; i++) {
 
-		key.push(k);
-		result.push(b ^ k);
+        let keyByte = lfsr.nextByte(); 
+        let resByte = fileData[i] ^ keyByte;
 
-	}
+        result[i] = resByte;
 
-	// вывод первых бит на экран
-	document.getElementById("original").value = bits.join("").slice(0, 1500);
-	document.getElementById("key").value = key.join("").slice(0, 1500);
-	document.getElementById("result").value = result.join("").slice(0, 1500);
+        if (bitsCollected < LIMIT) {
 
-	// возвращаем результат как байты
-	return bitsToBytes(result);
+            let origStr = fileData[i].toString(2).padStart(8, '0');
+            let keyStr  = keyByte.toString(2).padStart(8, '0');
+            let resStr  = resByte.toString(2).padStart(8, '0');
+
+            for (let j = 0; j < 8 && bitsCollected < LIMIT; j++) {
+                original_str += origStr[j];
+                key_str += keyStr[j];
+                result_str += resStr[j];
+                bitsCollected++;
+            }
+        }
+    }
+
+    // вывод в поля
+    document.getElementById("original").value = original_str;
+    document.getElementById("key").value = key_str;
+    document.getElementById("result").value = result_str;
+
+    return result;
 }
-
 
 // =====================================================
 // Скачивание результата на диск
