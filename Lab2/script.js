@@ -34,7 +34,7 @@ function cleanSeed(s) {
 
 class LFSR {
     constructor(seed) {
-        seed = cleanSeed(seed).padEnd(31, '1');
+        seed = cleanSeed(seed).padEnd(31, '0');
         this.reg = parseInt(seed, 2);
     }
 
