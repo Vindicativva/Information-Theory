@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Лабораторная №3 Рабин</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+        <div class="grid">
+
+            <div class="card">
+                <h3 style="margin-bottom: 10px;">Параметры Рабина</h3>
+
+                <div class="row">
+                    <label>p =</label>
+                    <input id="p" placeholder="Простое число ( При делении на 4, остаток 3 )" autocomplete="off">
+                </div>
+
+                <div class="row">
+                    <label>q =</label>
+                    <input id="q" placeholder="Простое число ( При делении на 4, остаток 3 )" autocomplete="off">
+                </div>
+
+                <div class="row">
+                    <label>b =</label>
+                    <input id="b" placeholder="0 ≤ b < n" autocomplete="off">
+                </div>
+
+                <div class="stat" id="info">
+                    n = -
+                </div>
+            </div>
+
+
+            <div class="card file-card">
+                <h3 style="margin-bottom: 10px;">Файл</h3>
+
+                <div class="drop" id="drop">
+                    <div class="upload-icon">☁</div>
+                    <div class="drop-text">Перетащите файл сюда</div>
+                    <div class="drop-subtext">или нажмите для выбора файла</div>
+                </div>
+
+                <input type="file" id="file">
+
+                <div class="stat" id="fileinfo">
+                    Файл не выбран
+                </div>
+
+                <div class="buttons">
+                    <button class="encrypt" onclick="encrypt()">Зашифровать</button>
+                    <button class="decrypt" onclick="decrypt()">Расшифровать</button>
+                    <button class="download h" onclick="download()" id="btnDownload">Скачать</button>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <h3 style="margin-bottom: 10px;">Исходный текст</h3>
+                <textarea id="original" readonly></textarea>
+            </div>
+
+
+            <div class="card">
+                <h3 style="margin-bottom: 10px;">Ключ</h3>
+                <textarea id="key" readonly></textarea>
+            </div>
+
+
+            <div class="card result-card">
+                <h3 style="margin-bottom: 10px;">Шифротекст (10 система)</h3>
+                <textarea id="result" readonly></textarea>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div>Лабораторная №3</div>
+            <div>Алгоритм Рабина</div>
+        </div>
+
+    </div>
+
+    <a id="downloadLink" style="display:none"></a>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
