@@ -146,15 +146,9 @@ function getParams(){
     // вычисление модуля
     let n = p*q
 
-    // модуль должен быть больше байта
-    if(n <= 256n){
-        alert("p * q должно быть > 256")
-        return null
-    }
-
     // проверка диапазона b
-    if(b < 0n || b >= n){
-        alert("b должно быть 0 ≤ b < n")
+    if(b >= n){
+        alert("b должно быть меньше n")
         return null
     }
 
