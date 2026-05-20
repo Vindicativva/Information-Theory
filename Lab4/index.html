@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная №4 - DSA (ЭЦП)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app">
+        <!-- Переключатель режимов -->
+        <div class="mode-switch">
+            <div class="mode-switch-container" id="modeSwitchContainer">
+                <button class="mode-btn active" data-mode="sign" onclick="switchMode('sign')">
+                    ✍️ Написание ЭЦП
+                </button>
+                <button class="mode-btn" data-mode="verify" onclick="switchMode('verify')">
+                    🔍 Проверка ЭЦП
+                </button>
+                <div class="mode-slider"></div>
+            </div>
+        </div>
+
+        <div class="grid">
+            
+            <!-- Левая карточка: Параметры DSA -->
+            <div class="card left-card">
+                <h3>📐 Параметры DSA</h3>
+                
+                <!-- Режим подписи -->
+                <div id="sign-mode-fields">
+                    <div class="two-columns">
+                        <!-- Левая колонка: Вычисление g -->
+                        <div class="column">
+                            <div class="column-title">🔢 Вычисление g</div>
+                            
+                            <div class="param-group">
+                                <label class="inline-label">
+                                    <span class="label-text">q =</span>
+                                    <input type="text" id="q" placeholder="107" class="param-input">
+                                    <span class="tooltip-icon" data-tooltip="📌 ПРАВИЛА ДЛЯ q:&#10;&#10;✓ q должно быть простым числом&#10;✓ Рекомендуемый размер: 160-256 бит&#10;✓ Делит (p-1) без остатка&#10;✓ Примеры: 107, 83, 101, 113, 151&#10;&#10;💡 Чем больше q, тем безопаснее подпись">ⓘ</span>
+                                </label>
+                            </div>
+
+                            <div class="param-group">
+                                <label class="inline-label">
+                                    <span class="label-text">p =</span>
+                                    <input type="text" id="p" placeholder="643" class="param-input">
+                                    <span class="tooltip-icon" data-tooltip="📌 ПРАВИЛА ДЛЯ p:&#10;&#10;✓ p должно быть простым числом&#10;✓ (p-1) должно делиться на q&#10;✓ Формула: p = 1 + n·q&#10;✓ Размер: 512-1024 бит&#10;&#10;💡 p должно быть больше q">ⓘ</span>
+                                </label>
+                            </div>
+
+                            <div class="param-group">
+                                <label class="inline-label">
+                                    <span class="label-text">h =</span>
+                                    <input type="text" id="h" placeholder="2" class="param-input">
+                                    <span class="tooltip-icon" data-tooltip="📌 ПРАВИЛА ДЛЯ h:&#10;&#10;✓ 1 &lt; h &lt; p-1&#10;✓ Обычно h = 2 (работает чаще всего)&#10;✓ Если g ≤ 1, попробуйте h = 3, 4, 5...&#10;&#10;💡 h — вспомогательный параметр для генерации g">ⓘ</span>
+                                </label>
+                            </div>
+
+                            <button class="calc-btn" onclick="calculateG()">🔢 Вычислить g</button>
+
+                            <div class="param-group result-group">
+                                <label class="inline-label">
+                                    <span class="label-text">g =</span>
+                                    <input type="text" id="g" readonly placeholder="—" class="param-input result-input">
+                                    <span class="tooltip-icon" data-tooltip="📌 ГЕНЕРАТОР g:&#10;&#10;✓ Формула: g = h^((p-1)/q) mod p&#10;✓ 1 &lt; g &lt; p (обычно)&#10;✓ Элемент порядка q в группе Z_p*&#10;&#10;💡 Является основой для создания ключей">ⓘ</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="vertical-divider"></div>
+
+                        <!-- Правая колонка: Вычисление y -->
+                        <div class="column">
+                            <div class="column-title">🔑 Вычисление y</div>
+                            
+                            <div class="param-group">
+                                <label class="inline-label" style="padding-top: 98px;">
+                                    <span class="label-text">x =</span>
+                                    <input type="text" id="x" placeholder="45" class="param-input">
+                                    <span class="tooltip-icon" data-tooltip="📌 СЕКРЕТНЫЙ КЛЮЧ x:&#10;&#10;✓ 0 &lt; x &lt; q&#10;✓ Выбирается случайным образом&#10;✓ Хранится в секрете!&#10;✓ Должен быть уникальным для каждого пользователя&#10;&#10;⚠️ НИКОМУ НЕ ПОКАЗЫВАЙТЕ x!">ⓘ</span>
+                                </label>
+                            </div>
+
+                            <button class="calc-btn" onclick="calculateY()">🔢 Вычислить y</button>
+
+                            <div class="param-group result-group">
+                                <label class="inline-label">
+                                    <span class="label-text">y =</span>
+                                    <input type="text" id="y" readonly placeholder="—" class="param-input result-input">
+                                    <span class="tooltip-icon" data-tooltip="📌 ОТКРЫТЫЙ КЛЮЧ y:&#10;&#10;✓ Формула: y = g^x mod p&#10;✓ 1 &lt; y &lt; p&#10;✓ Публикуется открыто&#10;✓ Используется для проверки подписей&#10;&#10;💡 Можно спокойно показывать другим">ⓘ</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="full-divider"></div>
+
+                    <div class="bottom-section">
+                        <div class="param-group half">
+                            <label class="inline-label">
+                                <span class="label-text">k =</span>
+                                <input type="text" id="k" placeholder="31" class="param-input">
+                                <span class="tooltip-icon" data-tooltip="📌 ЭФЕМЕРНЫЙ КЛЮЧ k:&#10;&#10;✓ 0 &lt; k &lt; q&#10;✓ НОД(k, q) = 1 (взаимно простые)&#10;✓ Уникальный для каждой подписи!&#10;✓ Должен быть случайным&#10;&#10;⚠️ НЕЛЬЗЯ использовать k повторно!&#10;⚠️ Если k повторяется — ключ x будет раскрыт!">ⓘ</span>
+                            </label>
+                        </div>
+
+                        <div class="param-group half">
+                            <label class="inline-label">
+                                <span class="label-text">H₀ =</span>
+                                <input type="text" id="h0" value="100" class="param-input">
+                                <span class="tooltip-icon" data-tooltip="📌 ХЕШ-ФУНКЦИЯ:&#10;&#10;✓ Начальное значение H₀ (инициализация)&#10;✓ Формула: H_i = (H_{i-1} + M_i)² mod q&#10;✓ H₀ может быть любым (обычно 100)&#10;✓ Функция необратима (односторонняя)&#10;&#10;💡 Результат — хеш сообщения">ⓘ</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Режим проверки -->
+                <div id="verify-mode-fields" style="display: none;">
+                    <div class="param-group">
+                        <label class="inline-label">
+                            <span class="label-text">q =</span>
+                            <input type="text" id="vq" placeholder="107" class="param-input">
+                            <span class="tooltip-icon" data-tooltip="📌 ПАРАМЕТР q:&#10;&#10;✓ Простое число (порядок подгруппы)&#10;✓ Должен совпадать с q при подписи&#10;✓ Размер: 160-256 бит&#10;&#10;💡 Безопасность подписи зависит от q">ⓘ</span>
+                        </label>
+                    </div>
+
+                    <div class="param-group">
+                        <label class="inline-label">
+                            <span class="label-text">p =</span>
+                            <input type="text" id="vp" placeholder="643" class="param-input">
+                            <span class="tooltip-icon" data-tooltip="📌 ПАРАМЕТР p:&#10;&#10;✓ Простое число (модуль)&#10;✓ (p-1) делится на q&#10;✓ Должен совпадать с p при подписи&#10;&#10;💡 Обычно p = 1 + n·q">ⓘ</span>
+                        </label>
+                    </div>
+
+                    <div class="param-group">
+                        <label class="inline-label">
+                            <span class="label-text">h =</span>
+                            <input type="text" id="vh" placeholder="2" class="param-input">
+                            <span class="tooltip-icon" data-tooltip="📌 ПАРАМЕТР h:&#10;&#10;✓ 1 &lt; h &lt; p-1&#10;✓ Используется для вычисления g&#10;✓ g = h^((p-1)/q) mod p&#10;&#10;💡 Должен совпадать с h при подписи">ⓘ</span>
+                        </label>
+                    </div>
+
+                    <div class="param-group">
+                        <label class="inline-label">
+                            <span class="label-text">y =</span>
+                            <input type="text" id="vy" placeholder="181" class="param-input">
+                            <span class="tooltip-icon" data-tooltip="📌 ОТКРЫТЫЙ КЛЮЧ y:&#10;&#10;✓ Получен как y = g^x mod p&#10;✓ Публичный ключ отправителя&#10;✓ Используется для проверки подписи&#10;&#10;💡 Должен совпадать с y при подписи">ⓘ</span>
+                        </label>
+                    </div>
+
+                    <div class="param-group">
+                        <label class="inline-label">
+                            <span class="label-text">H₀ =</span>
+                            <input type="text" id="vh0" value="100" class="param-input">
+                            <span class="tooltip-icon" data-tooltip="📌 ХЕШ-ФУНКЦИЯ:&#10;&#10;✓ Начальное значение H₀&#10;✓ ДОЛЖНО СОВПАДАТЬ с тем, что использовалось при подписи!&#10;✓ Иначе проверка не пройдёт&#10;&#10;⚠️ Очень важно использовать то же значение!">ⓘ</span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- Область загрузки файла (общая) -->
+                <div class="file-area">
+                    <div class="drop" id="drop-file">
+                        <div class="upload-icon">📄</div>
+                        <div class="drop-text">Перетащите файл сюда</div>
+                        <div class="drop-subtext">или нажмите для выбора файла</div>
+                    </div>
+                    <input type="file" id="file-input" style="display:none">
+                    <div class="file-info" id="fileinfo">
+                        Файл не выбран
+                    </div>
+                </div>
+
+                <button class="action-btn" id="actionBtn" onclick="onActionClick()">✍️ Подписать файл</button>
+            </div>
+            
+            <!-- Правая карточка: Результат ЭЦП / Проверка ЭЦП -->
+            <div class="card right-card">
+                <!-- Режим подписи -->
+                <div id="sign-result">
+                    <h3>📋 Результат ЭЦП</h3>
+                    
+                    <div class="params-info" id="paramsInfo">
+                        === ПАРАМЕТРЫ DSA ===<br>
+                        q = —<br>
+                        p = —<br>
+                        h = —<br>
+                        g = —<br>
+                        x = —<br>
+                        y = —<br>
+                        k = —<br>
+                        H₀ = —
+                    </div>
+                    
+                    <div class="hash-box" id="hashBox">
+                        <strong>🔐 Хеш сообщения (H):</strong><br>
+                        <span id="hashValue">—</span>
+                    </div>
+                    
+                    <div class="signature-box" id="signatureResult">
+                        <strong>🖊️ ЭЦП (r, s):</strong><br>
+                        r = —<br>
+                        s = —
+                    </div>
+                    
+                    <div class="status-box" id="statusBox">
+                        ⏳ Статус: ожидание подписи
+                    </div>
+                    
+                    <button class="download-btn h" id="btnDownload" onclick="downloadSigned()">💾 Скачать подписанный файл</button>
+                </div>
+
+                <!-- Режим проверки -->
+                <div id="verify-result" style="display: none;">
+                    <h3>🔍 Проверка ЭЦП</h3>
+                    
+                    <div class="hash-box" id="verifyHashBox">
+                        <strong>🔐 Хеш сообщения (H):</strong><br>
+                        <span id="verifyHashValue">—</span>
+                    </div>
+                    
+                    <div class="signature-box" id="verifySignatureBox">
+                        <strong>📜 Извлечённая подпись:</strong><br>
+                        r = —<br>
+                        s = —
+                    </div>
+                    
+                    <div class="verify-result-box" id="verifyResultBox">
+                        ❓ Результат проверки: —
+                    </div>
+                    
+                    <div class="calc-details" id="calcDetails">
+                        📐 Вычисленные значения появятся здесь
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <a id="downloadLink" style="display:none"></a>
+    
+    <script src="script.js"></script>
+    
+</body>
+</html>
